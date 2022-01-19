@@ -1,0 +1,74 @@
+#tab {
+    overflow-x: auto;
+    border: 1px solid black;
+    width: 100%;
+}
+
+th,
+td {
+    border: 1px solid black !important;
+}
+
+thead {
+    text-align: center;
+}
+
+.field1 {
+    border: 1px solid #ddd !important;
+    margin: 0%;
+    position: relative;
+    text-align: left;
+    padding: 9px 1% 1PX 1%;
+    border-radius: 4px;
+    background-color: white;
+}
+
+.leg1 {
+    padding: 3px 6px;
+    font-size: 14px;
+    font-weight: bold;
+    margin-bottom: 0px;
+    width: 17%;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    background-color: #343a40;
+    color: white;
+}
+
+.field2 {
+    border: 1px solid #ddd !important;
+    margin: 1% 0% 0% 0%;
+    padding: 5px 10px 5px 10px;
+    position: relative;
+    text-align: left;
+    border-radius: 4px;
+    background-color: white;
+}
+
+.leg2 {
+    padding: 3px 6px;
+    font-size: 14px;
+    font-weight: bold;
+    margin-bottom: 0px;
+    width: 17%;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    background-color: #343a40;
+    color: white;
+}
+
+.fiel1 {
+    border: 1px solid #ddd;
+    margin: 20px;
+    padding: 5px 10px 5px 10px;
+    border-radius: 4px;
+    background-color: white;
+}
+
+.fiel2 {
+    border: 1px solid #ddd;
+    margin: 0px 20px 0 2px;
+    padding: 12px 0px 12px 10px;
+    border-radius: 4px;
+    background-color: white
+}
