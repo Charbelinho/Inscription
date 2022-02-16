@@ -1,15 +1,13 @@
 <?php
 include '../db.php';
-//… connexion dans la base de données avec PDO
-
-
 
 //récupère le dernier article dans la base de données
 
 $req = $bdd->query('SELECT * FROM etudiant ORDER BY mat DESC LIMIT 1');
 $dernier_etudiant = $req->fetch();
 $req->closeCursor();
-$increment = "ETUDIANT_001";
+$increment = "ETUDIANT_1";
+
 /*
 Si le dernier etudiant n'est pas vide, ce qui montre qu'il y a des données dans la base de données
  */
@@ -19,7 +17,7 @@ if (!empty($dernier_etudiant)) {
      * Je sépare le mot etudiant de la partie à incrémenter
      * $part[0] aura le mot ETUDIANT et $part[1] aura le dernier l'id (ex 1)
      */
-    $part = explode('_', $dernier_etudiant['id']);
+    $part = explode('_', $dernier_etudiant['mat']);
 
     /*
      * J'incrémente la partie incrémentable et je le concatène sur le mot etudiant.
@@ -28,14 +26,20 @@ if (!empty($dernier_etudiant)) {
      */
     $increment = $part[0] . '_' . (int)$part[1] += 1;
 }
-    if (isset($_POST['ok'])) {
-        $req = $bdd->prepare("INSERT INTO etudiant(mat,nom_etudiant,pnom_etudiant,date_naissance,contact,mail,genre) VALUES(?,?,?,?,?,?,?)");
-        $res = $req->execute([$increment, $_POST['nom'], $_POST['prenom'], $_POST['date'], $_POST['contact'], $_POST['mail'], $_POST['genre']]);
-        if ($res) {
-            $mess = 'Etape 1 éffectué avec succès';
-            header("location: new1.php&$mess");
-        }
+function valid_data($data)
+{
+    $data = trim($data);
+    $data = stripslashes($data);
+    $data = htmlspecialchars($data);
+    return $data;
+}
+if (isset($_POST['ok'])) {
+    $req = $bdd->prepare("INSERT INTO etudiant(mat,nom_etudiant,pnom_etudiant,date_naissance,contact,mail,genre) VALUES(?,?,?,?,?,?,?)");
+    $res = $req->execute([$increment, valid_data($_POST['nom']), valid_data($_POST['prenom']), $_POST['date'], $_POST['contact'], valid_data($_POST['mail']), $_POST['genre']]);
+    if ($res) {
+        header("location: newNext.php");
     }
+}
 ?>
 <html lang="en">
 
@@ -74,20 +78,20 @@ if (!empty($dernier_etudiant)) {
                                                     <div class="form-group row">
                                                         <label for="pseudo" class="col-sm-2">Nom</label>
                                                         <div class="col-sm-10 ">
-                                                            <input type="text" class="form-control form-control-sm" id="nom" name="nom" value="" placeholder="Entrer votre nom" required />
+                                                            <input type="text" class="form-control form-control-sm" id="nom" name="nom" value="" placeholder="Entrer votre nom" required pattern="[A-Za-z]{2,15}" />
                                                         </div>
                                                     </div>
                                                     <div class="form-group row">
                                                         <label for="prenom" class="col-sm-2">Prénom(s)</label>
                                                         <div class="col-sm-10">
-                                                            <input type="text" class="form-control form-control-sm" id="prenom" name="prenom" value="" placeholder="Entrer le(s) Prénom(s)" required />
+                                                            <input type="text" class="form-control form-control-sm" id="prenom" name="prenom" value="" placeholder="Entrer le(s) Prénom(s)" required pattern="[A-Za-z\s]{4,40}" />
                                                         </div>
                                                     </div>
                                                     <div class="form-group row">
                                                         <label class="control-label col-lg-2 col-md-2 col-sm-2" for="">Date de naissance</label>
                                                         <div class="col-lg-10 col-md-10 col-sm-10">
                                                             <div id="datepicker" class="input-group input-group-sm date" data-target-input="nearest">
-                                                                <input type="text" class="form-control datetimepicker-input " name="date" data-target="#datepicker" required>
+                                                                <input type="date" class="form-control datetimepicker-input " name="date" data-target="#datepicker" required min="1990-01-01" max="2005-01-01" />
                                                                 <div class="input-group-append" data-target="#datepicker" data-toggle="datetimepicker">
                                                                     <div class="input-group-text" id="inputGroupappend">
                                                                         <i class="fas fa-calendar"></i>
@@ -109,13 +113,13 @@ if (!empty($dernier_etudiant)) {
                                                     <div class="form-group row">
                                                         <label for="contact" class="col-sm-2">Contact</label>
                                                         <div class="col-sm-10">
-                                                            <input type="text" class="form-control form-control-sm" id="contact" name="contact" value="" placeholder="Entrer votre contact" required />
+                                                            <input type="tel" class="form-control form-control-sm" id="contact" name="contact" value="" placeholder="Entrer votre contact" required minlength="10" maxlength="14" />
                                                         </div>
                                                     </div>
                                                     <div class="form-group row">
                                                         <label for="mail" class="col-sm-2">Email</label>
                                                         <div class="col-sm-10">
-                                                            <input type="mail" class="form-control form-control-sm" id="mail" name="mail" value="" placeholder="Entrer votre mail" required />
+                                                            <input type="mail" class="form-control form-control-sm" id="mail" name="mail" value="" placeholder="Entrer votre mail" required pattern="[A-Za-z0-9]+@{1}[A-Za-z]+\.{1}[A-Za-z]{2,}" />
                                                         </div>
                                                     </div>
                                                 </div>

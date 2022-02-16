@@ -77,7 +77,17 @@
         </div>
     </header>
     <!-- End Header -->
-
+        <?php if (isset($_GET['mess'])) : ?>
+        <div class="alert alert-dismissible alert-success mt-auto">
+            <button type="button" class="close" data-dismiss="alert">
+                <font style="vertical-align: inherit;">
+                    <font style="vertical-align: inherit;">&times;</font>
+                </font>
+            </button>
+            <h4 class="alert-heading" style="text-align:left;"><i class="fas fa-check"></i>&nbsp;Alert!</h4>
+            <p style="text-align:left;"><?php echo 'Pré-inscription éffectuée avec succès'; ?></p>
+        </div>
+    <?php endif ?>
     <!-- ======= Hero Section ======= -->
     <section id="hero">
         <div id="heroCarousel" data-bs-interval="5000" class="carousel slide carousel-fade" data-bs-ride="carousel">
