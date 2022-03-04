@@ -1,34 +1,8 @@
 <?php
 include '../db.php';
 
-//récupère le dernier article dans la base de données
-
-$dos = $bdd->query('SELECT * FROM dossier ORDER BY num DESC LIMIT 1');
-$dernier_dossier = $dos->fetch();
-$dos->closeCursor();
-$increment = "DOSSIER_1";
-
-/*
-Si le dernier dossier n'est pas vide, ce qui montre qu'il y a des données dans la base de données
- */
-if (!empty($dernier_dossier)) {
-
-    /*
-     * Je sépare le mot dossie de la partie à incrémenter
-     * $part[0] aura le mot DOSSIER et $part[1] aura le dernier l'id (ex 1)
-     */
-    $part = explode('_', $dernier_dossier['num']);
-
-    /*
-     * J'incrémente la partie incrémentable et je le concatène sur le mot dossie.
-     * J'ai profité au passage pour caster $part[1] en int pour s'assurer que j'aurais bien une
-     * valeur numérique à incrémenter
-     */
-    $increment = $part[0] . '_' . (int)$part[1] += 1;
-}
-
 //Requete pour recupérer le matricule du dernier etudiant enrégistrer
-$matetud = $bdd->query('SELECT mat FROM etudiant ORDER BY mat DESC LIMIT 1')->fetch();
+$matetud = $bdd->query('SELECT CodeEtud FROM etudiant ORDER BY CodeEtud DESC LIMIT 1')->fetch();
 
 //Requête pour récupérer les infos concernant la filière
 $fil = $bdd->query('SELECT * FROM filiere')->fetchAll();
@@ -60,8 +34,8 @@ if (isset($_POST['ok'])) {
         move_uploaded_file($nom, $nomdestination);
     }
     //Insertion des infos concernant la filiere,le niveau d'etude et le dossier de l'etudiant
-    $req = $bdd->prepare('INSERT INTO dossier(num,mat_etud,id_diplome,code_fil,id_niveau_etude,date_enregistrement,contenu_dossier) VALUES (?,?,?,?,?,?,?)');
-    $exec = $req->execute([$increment, $matetud['mat'],$_POST['lastdiplome'], $_POST['fil'], $_POST['niveau'], $_POST['hid'], $_FILES['my_file']['name']]);
+    $req = $bdd->prepare('INSERT INTO dossier(code_etud,id_diplome,code_fil,id_niveau_etude,date_enregistrement,contenu_dossier) VALUES (?,?,?,?,?,?)');
+    $exec = $req->execute([$matetud['CodeEtud'],$_POST['lastdiplome'], $_POST['fil'], $_POST['niveau'], $_POST['hid'], $_FILES['my_file']['name']]);
     if ($exec) {
         $mess = 'Pré-inscription éffectuée avec succès';
         header('location: ../index.php?mess=$mess');

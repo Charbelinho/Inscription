@@ -1,31 +1,5 @@
 <?php
 include '../db.php';
-
-//récupère le dernier article dans la base de données
-
-$req = $bdd->query('SELECT * FROM etudiant ORDER BY mat DESC LIMIT 1');
-$dernier_etudiant = $req->fetch();
-$req->closeCursor();
-$increment = "ETUDIANT_1";
-
-/*
-Si le dernier etudiant n'est pas vide, ce qui montre qu'il y a des données dans la base de données
- */
-if (!empty($dernier_etudiant)) {
-
-    /*
-     * Je sépare le mot etudiant de la partie à incrémenter
-     * $part[0] aura le mot ETUDIANT et $part[1] aura le dernier l'id (ex 1)
-     */
-    $part = explode('_', $dernier_etudiant['mat']);
-
-    /*
-     * J'incrémente la partie incrémentable et je le concatène sur le mot etudiant.
-     * J'ai profité au passage pour caster $part[1] en int pour s'assurer que j'aurais bien une
-     * valeur numérique à incrémenter
-     */
-    $increment = $part[0] . '_' . (int)$part[1] += 1;
-}
 function valid_data($data)
 {
     $data = trim($data);
@@ -34,8 +8,8 @@ function valid_data($data)
     return $data;
 }
 if (isset($_POST['ok'])) {
-    $req = $bdd->prepare("INSERT INTO etudiant(mat,nom_etudiant,pnom_etudiant,date_naissance,contact,mail,genre) VALUES(?,?,?,?,?,?,?)");
-    $res = $req->execute([$increment, valid_data($_POST['nom']), valid_data($_POST['prenom']), $_POST['date'], $_POST['contact'], valid_data($_POST['mail']), $_POST['genre']]);
+    $req = $bdd->prepare("INSERT INTO etudiant(nom_etudiant,pnom_etudiant,date_naissance,contact,mail,genre) VALUES(?,?,?,?,?,?)");
+    $res = $req->execute([valid_data($_POST['nom']), valid_data($_POST['prenom']), $_POST['date'], $_POST['contact'], valid_data($_POST['mail']), $_POST['genre']]);
     if ($res) {
         header("location: newNext.php");
     }
